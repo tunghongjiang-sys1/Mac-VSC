@@ -407,6 +407,90 @@ int main()
 }
 
 
+////////////////////////////////////////
+
+// LeetCode 122 — Unlimited Transactions
+// Real-world analogy - Active daily trader
+// https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/description/
+
+/*
+    What Does the DP Table Store?
+    We're using a 2D DP table dp[i][j], where:
+
+    i = day index (0 to n - 1)
+
+    j = 0 means we do not hold a stock on day i
+
+    j = 1 means we do hold a stock on day i
+*/
+
+#include <vector>
+using namespace std;
+
+int maxProfit(vector<int>& prices)
+{
+    // total number of trading days
+    int N = prices.size()
+
+    // define an Nx2 dp table
+    // ultimate question: what's the max profit that can be made from a total of N
+    // DP breaks it into smaller sub problems
+    // 1. whats the max profit that can be made on day 0?
+    // 2. whats the max profit that can be made on day 1?
+    // 3. whats the max profit that can be made on day 2? 
+    // ...
+
+    // the table has to track teh best profit up to a certain day i with / without the stock
+    vector<vector<int>> dp(N, vector<int>(2, 0));
+
+    // prefill the table with initial values
+    dp[0][0] = 0;
+    dp[0][1] = -pricses[0] v// spending = negative profit
+
+    // interate and fill the dp table wiuth a loop (i - row number)
+    for(int i = 1; i < N; i++)
+    {
+        // we will have to make a desicions each day 
+        // 1. to hold the stock until the end of day i
+        // There's 2 scenarios that can lead to holding the stock until teh edn of day i
+        // Scenario 1: REPURCHASE the stcok on day1
+        // Scenario 2: continue holding the stock we previously bought
+
+        // 2. to NOT hold the stock until the end of day i
+        
+    }
+    // The profit that can be made up to day 0 without holding the stock by the end of day 0
+    // The max profit that can be made up to day 0 while holding the stock by the end of day 0
+    // if (0, 0) = 0, cos of: 1. DO NOT TRADE AT ALL; 2. BUY AND SELL ON THE SAME DAY 
+    
+    
+    
+}
+
+/*
+dp[0][0]:
+What's the profit that can be made up to day 0, 
+without holding the stock by the end of of day 0
+
+What are two scenarios that can lead to
+Not having the stock by the end of day 0?
+
+1. DO NOT TRADE AT ALL (profit 0)
+2. BUY AND SELL on the same day 0 (profit 0)
+
+dp[0][1]:
+max profit that can be made up to day 0,
+WITH the stock in the account by the end of day 0
+
+What's the scenario that can lead to having
+the stock in the account by the end of day 0?
+1. BUY THE STOCK and HOLD IT
+*/
+
+int main() {
+    vector<int> prices = {7,1,5,3,6,4};
+}
+
 
 
 
