@@ -729,6 +729,12 @@ int minimumEffortPath(vector<vector<int>>& heights)
         int ux = top[1]; // current transit node's x coordinate
         int uy = top[2]; // current transit node's y coordinate
 
+        // skip transit nodes we've explored previously
+        if(currEffort > efforts[ux][uy]) continue;
+
+        // when the bottom right cell serves as the transit node u
+        if(ux == m - 1 && uy == n - 1) return currEffort;
+
         // step2: visit all transit node's direct neighbours
         // by moving UP, DOWN, LEFT, RIGHT
         for(auto [dx, dy] : directions)
@@ -738,7 +744,24 @@ int minimumEffortPath(vector<vector<int>>& heights)
             int vx = ux + dx;
             int vy = uy + dy;
 
-            // only consider node v within bound
+            // check if the destination node v is within bound
+            if(vx >= 0 && vx < m && vy >= 0 && vy < n)
+            {
+                // calculate absolute difference between node u and v
+                int heightDiff = abs(heights[ux][uy] - heights[vx][vy]);
+
+                // choose the max effort between k-u and u-v
+                int pathEffort = max(currEffort, heightDiff);
+                
+                // if pathEffort less than what we have on the record?
+                if(pathEffort < efforts[vx][vy])
+                {
+                    efforts[vx][vy] = pathEffort;
+
+                    // enqueue node v (node v will become the next transit node)
+                    pq.push({pathEffort, vx, vy});
+                }
+            }
 
         }
 
@@ -746,7 +769,7 @@ int minimumEffortPath(vector<vector<int>>& heights)
 
     }
 
-    
+    return -1; 
     
 }
 
