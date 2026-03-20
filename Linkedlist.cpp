@@ -1,3 +1,7 @@
+////////////////////////////////////////////////////////////
+// Singly Linked List with Append and Insert at Position
+////////////////////////////////////////////////////////////
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -89,7 +93,7 @@ public:
         current = head;
         int index = 0;
 
-        while(index < pos - 1)
+        while(index < pos - 1 && current->next != nullptr)
         {
             current = current -> next;
             index++;
@@ -97,13 +101,9 @@ public:
 
         // Once the location is identified, insert the new node
         NewNode -> next = current ->  next;
-        current -> next = NewNode
-        
+        current -> next = NewNode;        
     }
 };
-
-
-
 
 
 int main()
@@ -125,38 +125,36 @@ int main()
 }
 
 
-
-
-//////////////////////////////////
-
-// Circular Linked List
+////////////////////////////////////////////////////////////
+// Circular Linked List + Josephus Problem
+////////////////////////////////////////////////////////////
 
 #include <iostream>
 using namespace std;
 
-struct Node {
+struct NodeInt {
     int data;
-    Node * next;
+    NodeInt * next;
 
     // Constructor
-    Node(int val) : data(val), next(nullptr) {}
+    NodeInt(int val) : data(val), next(nullptr) {}
 };
 
 
 // Function to build a circular linked list
 // The function has to return the head ptr of a circular linked list
 // n = number of nodes
-Node * CircularLinkedList(int n)
+NodeInt * CircularLinkedList(int n)
 {
     // create a new node ptr called head
     // Set head to point to a new node that holds an integer 1
-    Node * head = new Node(1);
+    NodeInt * head = new NodeInt(1);
 
-    Node * current = head;
+    NodeInt * current = head;
 
     for(int i = 2; i <= n; i++)
     {
-        current -> next = new Node(i);
+        current -> next = new NodeInt(i);
         current = current -> next;
     }
  
@@ -171,9 +169,9 @@ Node * CircularLinkedList(int n)
 int Josephus(int n, int k)
 {
     // declare a circular linked list to begin with
-    Node * head = CircularLinkedList(n);
-    Node * prev = nullptr;
-    Node * current = head;
+    NodeInt * head = CircularLinkedList(n);
+    NodeInt * prev = nullptr;
+    NodeInt * current = head;
     
     // the while loop repeats for as long as it has more than 1 node in the circular linked list
     while(current -> next != current)
@@ -215,19 +213,24 @@ int main()
 
     return 0;
 }
-/////////////////////////////
+
+
+////////////////////////////////////////////////////////////
+// Doubly Linked List
+////////////////////////////////////////////////////////////
+
 #include <iostream>
 using namespace std; 
 
-class Node 
+class NodeDLL 
 {
 public:
     int data;
-    Node * prev;
-    Node * next;
+    NodeDLL * prev;
+    NodeDLL * next;
 
     // Constructor function
-    Node(int value)
+    NodeDLL(int value)
     {
         data = value;
         prev = nullptr;
@@ -238,39 +241,41 @@ public:
 class DoublyLinkedList
 {
 public:
-    Node * head;
-    Node * tail;
+    NodeDLL * head;
+    NodeDLL * tail;
     int size;
 
-    // Constrcuter function
+    // Constructor function
     DoublyLinkedList()
     {
         head =  nullptr;
         tail =  nullptr;
-        size = 0
+        size = 0;
     }
 
     // Function that inserts a node at any given position
     void InsertNodeAtPos(int data, int position)
     {
-        if (position < 0) || position > size
+        if (position < 0 || position > size)
         {
             cout << "Invalid position" << endl;
             return; 
         }
     
-        Node * NewNode = new Node(data)
+        NodeDLL * NewNode = new NodeDLL(data);
 
         // If a new node has to be inserted as the head node
-        if(position = 0)
+        if(position == 0)
         {
-            NewNode -> next = head
-            head -> prev= NewNode
+            NewNode -> next = head;
+            if(head) head -> prev = NewNode;
             head = NewNode;
-        } else
+            if(tail == nullptr) tail = NewNode;
+        } 
+        else
         {
-            // Traverse the linked lsit to get the position
-            Node * current = head;
+            // Traverse the linked list to get the position
+            NodeDLL * current = head;
 
             for(int i = 0; i < position - 1; i++)
             {
@@ -279,94 +284,104 @@ public:
             
             NewNode -> next = current -> next;
             NewNode -> prev = current;
-            current -> next -> prev = NewNode;
-            
-    
-                
+            if(current -> next) current -> next -> prev = NewNode;
+            current -> next = NewNode;
+
+            if(NewNode -> next == nullptr) tail = NewNode;                
         }   
+        size++;
     }
-    size++;
 };
 
-//////////////////////////////////////////////////////////////////
 
-// Least Recently Used (LRU) Cache Algorithm
-
-// Hashmap (unordered map) + Doubly Linked List
+////////////////////////////////////////////////////////////
+// LRU Cache using Doubly Linked List + Hash Map
+////////////////////////////////////////////////////////////
 
 #include <iostream>
 #include <unordered_map>
 using namespace std;
 
-struct Node {
+struct NodeLRU {
     int key;
     int value;
-    Node * prev;
-    Node * next;
+    NodeLRU * prev;
+    NodeLRU * next;
 
     // Constructor
-    Node(int k, int v) : key(k), value(v), prev(nullptr), next(nullptr) {}
+    NodeLRU(int k, int v) : key(k), value(v), prev(nullptr), next(nullptr) {}
 };
 
 class LRUCache 
 {
- private:
-    // create an empty hashmap
-    unordered_map<int, NOde*> cache
-
-    // create an empty DLL
-    Node * head;
-    Node * tail;
-    int capcity;
-
-public:
-    //constructor function
-    LRUCache(int c) : capcity(c)
-    {
-        head = new Node(-1, -1);
-        tail = new Node(-1, -1);
-        head -> next = tail;
-        tail -> prev aawa= head;
-    }
-
-    void put(int key, int value)
-    {
-        
-    }
-
-    void get(int key)
-    {
-        
-    }
 private:
-    void MoveToHead(Node * node)
-    {
-        RemoveNode(node);
-        AddToHead(node);
-    }
+    unordered_map<int, NodeLRU*> cache;
 
-    void AddToHead(Node * node)
-    {
-        node -> next = head -> nexT;
-        node -> prev = head;
-        head -> next = node;
-    }
+    NodeLRU * head;
+    NodeLRU * tail;
+    int capacity;
 
-    void RemoveNode(Node * node)
+    void RemoveNode(NodeLRU * node)
     {
         node -> prev -> next = node -> next;
         node -> next -> prev = node -> prev;
     }
 
+    void AddToHead(NodeLRU * node)
+    {
+        node -> next = head -> next;
+        node -> prev = head;
+        head -> next -> prev = node;
+        head -> next = node;
+    }
+
+    void MoveToHead(NodeLRU * node)
+    {
+        RemoveNode(node);
+        AddToHead(node);
+    }
+
+public:
+    //constructor function
+    LRUCache(int c) : capacity(c)
+    {
+        head = new NodeLRU(-1, -1);
+        tail = new NodeLRU(-1, -1);
+        head -> next = tail;
+        tail -> prev = head;
+    }
+
+    int get(int key)
+    {
+        if(cache.find(key) == cache.end())
+            return -1;
+
+        NodeLRU* node = cache[key];
+        MoveToHead(node);
+        return node->value;
+    }
+
     void put(int key, int value)
     {
-        // if the key already exist, modify its value
         if(cache.find(key) != cache.end())
         {
-            Node * node = cache[key]
-            ndoe -> value = value;
+            NodeLRU * node = cache[key];
+            node -> value = value;
             MoveToHead(node);
         }
-    }
-}
+        else
+        {
+            if(cache.size() == capacity)
+            {
+                NodeLRU * lru = tail->prev;
+                cache.erase(lru->key);
+                RemoveNode(lru);
+                delete lru;
+            }
 
+            NodeLRU * newNode = new NodeLRU(key, value);
+            cache[key] = newNode;
+            AddToHead(newNode);
+        }
+    }
+};

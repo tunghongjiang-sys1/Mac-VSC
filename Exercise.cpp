@@ -27,9 +27,9 @@ int FirstUnqiChar(string s)
     queue<char> q;
 
     // Traverse / Iterate styring s with a fro each loop
-    for(hcar ch : s)
+    for(char ch : s)
     {
-        cout_map[ch]++;
+        count_map[ch]++;
 
     }
 
@@ -43,13 +43,13 @@ int FirstUnqiChar(string s)
     // Check the queue for the first non-repeating character
     while(!q.empty())
     {
-        char front = q.front()
+        char front = q.front();
         if(count_map[front] == 1)
         {
             // Return its index
             return s.find(front);
         }
-        q.pop
+        q.pop();
 
     }
 
@@ -113,7 +113,7 @@ string frequencySort(string s)
     }
 
     // transfer all key value pairs in the map to the pq
-    for(auto& pair; CountMap)
+    for(auto& pair:CountMap)
     {
         pq.push({pair.first, pair.second});
     }

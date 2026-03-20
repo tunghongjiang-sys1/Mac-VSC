@@ -10,28 +10,30 @@ using namespace std;
 // N - Number of items
 int knapsack(int C, const vector<int>& weights, const vector<int>& values, int N)
 {
-    // make a DP table (2D vectors) with (N+1) rows and (C+1) columns
-    vector<vector<int>> DP(N+1, vector<int>(C+1, 0));
+    // DP table: (N+1) x (C+1)
+    vector<vector<int>> DP(N + 1, vector<int>(C + 1, 0));
 
-    // Iterate all rows
-    for(int i = 1; i < N+1; i++)
+    // Build table
+    for (int i = 1; i <= N; i++)
     {
-        for(int j = 1; j < C+1; j++)
+        for (int j = 1; j <= C; j++)
         {
-          // if current gem i can fit into the current knapsack with capcity  
-          if(weights[i-1] <= j)
-          {
-            int pwgi = values[i-1] + DP[i-1][j-weights[i-1]j-weight[i-1]];
-            int pwogi = DP[i-1][j];
-            DP[i][j]= max(pwgi, pwogi);
-          } else
-          {
-            DP[i][j] = DP[i-1][j];
-          }
+            // If item i-1 fits
+            if (weights[i - 1] <= j)
+            {
+                int pwgi = values[i - 1] + DP[i - 1][j - weights[i - 1]];
+                int pwogi = DP[i - 1][j];
+                DP[i][j] = max(pwgi, pwogi);
+            }
+            else
+            {
+                DP[i][j] = DP[i - 1][j];
+            }
         }
     }
-  return DP[N][C];
-    }
+
+    return DP[N][C];
+}
 
 int main()
 {
@@ -40,11 +42,10 @@ int main()
     vector<int> values = {60, 50, 70, 30};
     int N = weights.size();
 
-    cout << "Maximum achievable value in the knapsack: " <<  knapsack(C, weights, values, N) << endl;
-
-
+    cout << "Maximum achievable value in the knapsack: "
+         << knapsack(C, weights, values, N) << endl;
+}
   /////////////////////////////////////////////////
-
   /*
 Question: Climbing Stairs
 
@@ -61,7 +62,8 @@ In how many distinct ways can you climb to the top?
 #include <vector>                       
 using namespace std;                 
 
-long long climbStairs(int n) {
+long long climbStairs(int n)
+{
     // creates a dp table with 1 row and n+1 columns
     vector<long long> dp(n+1, 0); 
 
@@ -104,23 +106,23 @@ Find the number of unique paths from the top-left corner to the bottom-right cor
 using namespace std;
 
 // m - number of rows
-// n - number of columms 
-long long uniquePaths(int m , int n)
+// n - number of columns
+long long uniquePaths(int m, int n)
 {
-    vector<vector<long>> dp(m, vector<long long>(n-1)); //Initialize all with 1s
+    // dp[i][j] = number of unique paths to cell (i, j)
+    vector<vector<long long>> dp(m, vector<long long>(n, 1));
 
-    
-    for(int i = 1; i < m; i++)
+    // start from (1,1) since first row & column are already 1
+    for (int i = 1; i < m; i++)
     {
-        for(int j = 1; j < n; j++)
+        for (int j = 1; j < n; j++)
         {
-            
-            // fill each slot with the sum f its top and left cell's value
             dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
         }
     }
-}
 
+    return dp[m - 1][n - 1];
+}
 
 int main()
 {
@@ -128,6 +130,8 @@ int main()
     cout << "Number of unique paths: " << uniquePaths(m, n) << endl;
     return 0;
 }
+
+//////////////////
 
 #include <iostream>
 #include <vector>
@@ -213,7 +217,7 @@ int countWaysToMakeChange(vector<int>& coins, int m, int n) {
         
     }
 
-    return dp[m][n]
+    return dp[m][n];
 
     // fill the dp table from slot (1, 1) onwards with a dp relation
 }
@@ -370,42 +374,42 @@ using namespace std;
 
 int maxProfit(vector<int>& prices)
 {
-    // total nunber of trading days
+    // total number of trading days
     int N = prices.size();
+    if (N == 0) return 0;
 
-    // Ultimate Question: Over a period of N days, what the max profit you can make
-
-    //create a 1d DP table
-    // which has to keep a record of max profit that can be made up to day i
-    // i - day number
-
+    // dp[i] = max profit that can be made up to day i
     vector<int> dp(N, 0);
 
-    // no profit can be made if there's jsut 1 day to trade up to
-    // we are only allowed to sell teh stock on a different day in the future
-    dp[0] = 0
+    // no profit can be made on day 0
+    dp[0] = 0;
 
-    // first assume that the stock was bought on day 0
-    int BuyPrice = prices[0]
+    // assume stock is bought on day 0 initially
+    int BuyPrice = prices[0];
 
-    for(int i = 1; i < N; i++)
+    for (int i = 1; i < N; i++)
     {
-        // on each day, we can choose:
-        // 1. to hold the stock
-        // if you hold the stock, the max profit that you can make up to day i is just the same as the max profit that you can make up to day i-1
-        int holdprofit = ;
-        // 2. to sell it for a profit
+        // 1. hold the stock (do nothing)
+        int holdprofit = dp[i - 1];
+
+        // 2. sell the stock today
         int sellprofit = prices[i] - BuyPrice;
 
+        // best profit up to day i
+        dp[i] = max(holdprofit, sellprofit);
+
+        // update lowest buying price so far
+        BuyPrice = min(BuyPrice, prices[i]);
     }
-    
+
+    return dp[N - 1];
 }
 
 int main()
 {
     vector<int> prices = {7, 1, 5, 3, 6, 4};
+    cout << maxProfit(prices) << endl;  // Output: 5
 }
-
 
 ////////////////////////////////////////
 
@@ -430,41 +434,62 @@ using namespace std;
 int maxProfit(vector<int>& prices)
 {
     // total number of trading days
-    int N = prices.size()
+    int N = prices.size();
 
-    // define an Nx2 dp table
-    // ultimate question: what's the max profit that can be made from a total of N
-    // DP breaks it into smaller sub problems
-    // 1. whats the max profit that can be made on day 0?
-    // 2. whats the max profit that can be made on day 1?
-    // 3. whats the max profit that can be made on day 2? 
-    // ...
+    // define an N x 2 dp table
+    // Ultimate question: What's the max profit that can be made from a total of N days
+    // DP breaks it into smaller subproblems:
+    // 1. What's the max profit that can be made up to day 0?
+    // 2. What's the max profit that can be made up to day 1?
+    // 3. What's the max profit that can be made up to day 2?
+    // 4. .....
 
-    // the table has to track teh best profit up to a certain day i with / without the stock
+    // The dp table has to track the best profit up to a certain day i, with / without the stock
     vector<vector<int>> dp(N, vector<int>(2, 0));
 
     // prefill the table with initial values
     dp[0][0] = 0;
-    dp[0][1] = -pricses[0] v// spending = negative profit
+    dp[0][1] = -prices[0]; // spending = negative profit
 
-    // interate and fill the dp table wiuth a loop (i - row number)
+    // iterate and fill the dp table with a loop (i - row number)
     for(int i = 1; i < N; i++)
     {
-        // we will have to make a desicions each day 
+        // we'll have to make a decision each day, either:
+
         // 1. to hold the stock until the end of day i
-        // There's 2 scenarios that can lead to holding the stock until teh edn of day i
-        // Scenario 1: REPURCHASE the stcok on day1
+        // There're 2 scenarios that can lead to having the stock in the account until the end of day i
+        // Scenario 1: REPURCHASE and hold the stock on day i
         // Scenario 2: continue holding the stock we previously bought
+        
+        // profit from Snenario 1
+        // it equals to the profit that can be made up to the day before AFTER OFFloading the stock + today's spending
+        int repurchase_profit = dp[i - 1][0] - prices[i];
+
+        // profit from Scenario 2
+        // if we take no action and keep holding the stock, the profit that can be made up till today = the profit that can be made up till yesterday with stock 
+        int hold_profit = dp[i - 1][1];
+
+        // fill all dp cells on column 1 (column with stock by the end of day i)
+        dp[i][1] = max(repurchase_profit, hold_profit);
+
+
 
         // 2. to NOT hold the stock until the end of day i
-        
+        // there're two actions that can lead to us NOT holding the stock by the end of day i
+        // action 1: make no transaction
+        // action 2: sell the stock you've been holding at today's price (profit that can be made up to yesterday with stock + today's profit)
+
+        // profit from action 1
+        int no_transaction_profit = dp[i - 1][0];
+
+        // profit from action 2
+        int sell_profit = dp[i - 1][1] + prices[i];
+
+        // fill all dp cells on column 0 (column without stock by the end of day i)
+        dp[i][0] = max(no_transaction_profit, sell_profit);
     }
-    // The profit that can be made up to day 0 without holding the stock by the end of day 0
-    // The max profit that can be made up to day 0 while holding the stock by the end of day 0
-    // if (0, 0) = 0, cos of: 1. DO NOT TRADE AT ALL; 2. BUY AND SELL ON THE SAME DAY 
-    
-    
-    
+
+    return dp[N - 1][0];
 }
 
 /*
@@ -490,6 +515,115 @@ the stock in the account by the end of day 0?
 int main() {
     vector<int> prices = {7,1,5,3,6,4};
 }
+
+//////////////////////////////////
+// LeetCode 403 - Frog Jump
+// https://leetcode.com/problems/frog-jump/description/
+// DP + Hashmap (Dictionary) + Set
+
+// The Set data structure doesn't allow duplicated elements
+
+
+
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
+using namespace std;
+
+bool canCross(vector<int>& stones)
+{
+    // base case:
+    // if there's no stone at position 0, the frog can never cross the river
+    // because the first jump length from stone 0 must be 1
+    if(stones[1] != 1) return false;
+
+    // create a HASHMAP dp table that stores:
+    // for each stone, record all possible jump lengths that could lead to that stone
+    // stone positions serve as KEYS, sets of all possible jump lengths serve as VALUES
+    unordered_map<int, unordered_set<int>> dp;
+
+    // set all dp keys to stone positions
+    for(int s : stones)
+    {
+        dp[s] = unordered_set<int>();
+    }
+
+    // provide initial values
+    // search for key "1"'s value
+    dp[1].insert(1);
+
+
+    for(int i = 1; i < stones.size(); i++)
+    {
+        // for each stone in dp:
+        int currentStone = stones[i];
+
+        // for each previous jump length, k that could lead to the stone
+        for(int k : dp[currentStone])
+        {
+            // calculate for the next possible jump lengths, k-1, k, k+1
+            for(int step = k - 1; step <= k + 1; step++)
+            {
+                // for each "step", check if it could lead to a stone
+                // count() checks if a certain key exist in a hashmap
+                if(step > 0 && dp.count(currentStone + step))
+                {
+                    // if a "step" leads to the next stone
+                    // add "step" to the value of the stone key
+                    dp[currentStone + step].insert(step);
+                }
+            }
+        }
+    }
+
+    // check if the LAST STONE has any jump length that could lead to it
+    if( dp[ stones[ stones.size() - 1 ] ].empty() )
+    {
+        return false;
+    } else
+    {
+        return true;
+    }
+}
+
+
+
+
+
+
+
+/*
+dp = {
+    1 : {1}
+    3 : {2}
+    5 : {2}
+    6 : {3}
+    8 : {}
+    12 : {}
+    17 : {}
+}
+*/
+
+
+int main()
+{
+    vector<int> stones = {0,1,3,5,6,8,12,17};
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

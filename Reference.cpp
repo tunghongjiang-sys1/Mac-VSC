@@ -21,7 +21,7 @@ int main()
     int height = 180;
     int& height2 = height;
     height2 = 200;
-    cout <, height << endl;
+    cout << height << endl;
 
     return 0;
 }

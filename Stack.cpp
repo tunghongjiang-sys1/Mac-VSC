@@ -1,98 +1,112 @@
-/ Implement browser's BACK, FORWARD, and NAVIGATION functionalities with STACK
+// =====================
+// Browser Navigation using Stack
+// =====================
 
 #include <iostream>
 #include <stack>
-#include namespace std;
+#include <string>
+using namespace std;
 
 // Create 2 stacks to hold BACK and FORWARD browsing histories
 stack<string> backStack;
 stack<string> forwardStack;
 string currentPage;
 
-// Launch with the home page
-currentPage = "https://homepage.com";
-cout << "Starting at: " << currentPage << endl;
-
+// Navigate to a new page
 void Navigate(const string& newPageURL)
 {
-    // Make sure currentPage is not currently empty
+    // Save currentPage in backStack before navigating to another page
     if (!currentPage.empty())
     {
-        // Save currentPage in backStack before navigating to another page
+        backStack.push(currentPage);
+        // Clear forward stack when navigating to a new page
+        while (!forwardStack.empty()) forwardStack.pop();
     }
 
     currentPage = newPageURL;
     cout << "Visiting " << currentPage << endl;
 }
 
+// Go back to previous page
 void back()
 {
     if (backStack.empty())
     {
-        cout << "No back pages avaliable , back button disabled"
-    }else
+        cout << "No back pages available, back button disabled" << endl;
+    }
+    else
     {
-        // Before returning to the previous page
-        // Save currentPage in forwardStack
         forwardStack.push(currentPage);
         currentPage = backStack.top();
         backStack.pop();
-        cput << "Back to: " << currentPage << endl;
-
+        cout << "Back to: " << currentPage << endl;
     }
 }
 
-void forward
+// Go forward to next page
+void forward()
 {
-    
+    if (forwardStack.empty())
+    {
+        cout << "No forward pages available, forward button disabled" << endl;
+    }
+    else
+    {
+        backStack.push(currentPage);
+        currentPage = forwardStack.top();
+        forwardStack.pop();
+        cout << "Forward to: " << currentPage << endl;
+    }
 }
 
-int main
-{
+// =====================
+// Main function for browser simulation
+// =====================
 
-    // Launch with the home page
+int main()
+{
     currentPage = "https://homepage.com";
     cout << "Starting at: " << currentPage << endl;
-    
+
     while (true)
     {
-
-    
         cout << "Navigate(N), Back(B), Forward(F), Quit(Q)?" << endl;
-
         string command;
         cin >> command;
 
         string userInputURL;
 
-        
-        if(command == "N")
+        if (command == "N")
         {
-            // Navigate to a new page
-            cout << "Enter a valid URL: " << endl;
-            cin << userInputURL;
+            cout << "Enter a valid URL: ";
+            cin >> userInputURL;
             Navigate(userInputURL);
-
-        } else if (command = "B")
+        }
+        else if (command == "B")
         {
-            // Return to the previous page
-
-        } else if (command = "F")
+            back();
+        }
+        else if (command == "F")
         {
-            //Forward to another page
-
-        }else if (comamnd = "Q")
+            forward();
+        }
+        else if (command == "Q")
         {
-            // Quit the browser
-
+            cout << "Exiting browser..." << endl;
+            break;
+        }
+        else
+        {
+            cout << "Invalid command!" << endl;
         }
     }
 
     return 0;
-
 }
 
-//////////////////////////////////////////////////////////////////////////
+// =====================
+// Baseball Game (Leetcode 682)
+// =====================
 
 #include <iostream>
 #include <vector>
@@ -100,125 +114,113 @@ int main
 #include <string>
 using namespace std;
 
- 
-
-// 682. Baseball Game
-
-// operations = ["5", "2", "C", "D", "+"]
-
-int calPoint(vector<string>& operations)
+int calPoints(vector<string>& operations)
 {
-    // Initialize an empty stack
     stack<int> record;
 
-    // for-each loop to iterate operations vector
-    for(const string& op : operations)
+    for (const string& op : operations)
     {
-        if(op == "C")
+        if (op == "C")
         {
-            if(!record.empty())
-            {
+            if (!record.empty())
                 record.pop();
-            }
-        } else if (op == "D")
+        }
+        else if (op == "D")
         {
-            if(!record.empty())
-            {
+            if (!record.empty())
                 record.push(2 * record.top());
-            }
-        } else if (op == "+")
+        }
+        else if (op == "+")
         {
-            if(record.size() >= 2)
+            if (record.size() >= 2)
             {
-                int top1 = record.top();
-                record.pop();
-
+                int top1 = record.top(); record.pop();
                 int top2 = record.top();
-
                 record.push(top1);
-
                 record.push(top1 + top2);
             }
-        } else
+        }
+        else
         {
-            record.push(stop(op));
+            record.push(stoi(op));
         }
     }
 
-    // Sum all scores in record stack
-    // 4 lines
     int total = 0;
     while (!record.empty())
     {
-        total =  total + record.top();
+        total += record.top();
         record.pop();
     }
     return total;
-
-}
-
-// pop, push, top, size, empty
-
-/////////////////////////////////////////////////////////////////////////////////////
-
-#include <string>
-#include <stack>
-#include <iostream>
-using namespace std;
-
-// STACK - push, pop, size, top
-
-/*
-Leetcode 71. Simplify Path
-
-input path: "/.../a/../b/c/../d/.//"
-
-output path: /.../b/d
-*/
-
-string simplyfyPath(string rawPath)
-{
-    stack<string> stack;
-
-    string currentLocation;
-
-    // Iterate through the rawPath
-    for(char c : rawPath)
-    {
-        // Extract current loactionif it hits slash
-        if(c == '/')
-        {
-            if(currentLocatgion == "..")
-            {
-
-            } else if(!currentLocation.empty() && currentLOcation != ".")
-            {
-                s.push(currentLocation)
-            }
-
-            currentLocation.clear()
-        }else
-        }
-
-            // Continue reading
-            currentLocation += c;
-        {
-    }
-
-    //REVERSE PRINT THE STACK
-    string simplifyedPath;
-
-    while(!s.empty())
-    {
-        simplifiedPath = "/" + s.top() + simpplifiedPath;
-        s.pop();
-    }   
-    return simplifiedPath;
-
-
 }
 
 int main()
 {
-    cout << simplifyPath("/A/B/..") << endl;
+    vector<string> operations = {"5", "2", "C", "D", "+"};
+    cout << "Total points: " << calPoints(operations) << endl;
+    return 0;
 }
+
+// =====================
+// Simplify Unix Path (Leetcode 71)
+// =====================
+
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+string simplifyPath(string rawPath)
+{
+    stack<string> s;
+    string currentLocation;
+
+    for (char c : rawPath)
+    {
+        if (c == '/')
+        {
+            if (currentLocation == "..")
+            {
+                if (!s.empty()) s.pop();
+            }
+            else if (!currentLocation.empty() && currentLocation != ".")
+            {
+                s.push(currentLocation);
+            }
+            currentLocation.clear();
+        }
+        else
+        {
+            currentLocation += c;
+        }
+    }
+
+    // Handle the last segment
+    if (currentLocation == "..")
+    {
+        if (!s.empty()) s.pop();
+    }
+    else if (!currentLocation.empty() && currentLocation != ".")
+    {
+        s.push(currentLocation);
+    }
+
+    // Build the simplified path
+    string simplifiedPath;
+    while (!s.empty())
+    {
+        simplifiedPath = "/" + s.top() + simplifiedPath;
+        s.pop();
+    }
+
+    return simplifiedPath.empty() ? "/" : simplifiedPath;
+}
+
+int main()
+{
+    string path = "/.../a/../b/c/../d/.//";
+    cout << "Simplified path: " << simplifyPath(path) << endl;
+    return 0;
+}
+
