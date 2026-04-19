@@ -775,4 +775,94 @@ int minimumEffortPath(vector<vector<int>>& heights)
 
 
 
+//////////////////////////////////////
+
+// Leetcode 778 - Swim in Rising Water
+// https://leetcode.com/problems/swim-in-rising-water/description/
+
+/*
+Key Insight:
+
+You don't care about:
+How long the path is, How many steps it takes
+
+You only care about:
+What is the highest elevation along a clear path
+
+Because water must rise up to the highest elevation of a path 
+for the path to become a clear path
+
+----------------------------------------------------------------------
+
+Goal:
+Find a path from start to end
+where the maximum height along the path
+is the minimum (classic minimax problem)
+*/
+
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+using namespace std;
+
+int swimInWater(vector<vector<int>>& grid) 
+{
+    int n = grid.size();
+
+    // step 1: assume minimum time to reach each cell to be infinity
+    vector<vector<int>> times(n, vector<int>(n, INT_MAX));
+    times[0][0] = grid[0][0];
+
+    // min-heap : {currTime, row, col}
+    priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
+
+    // Dijkstra path: k -> u -> v
+    // a node that is a about to serve as the transit node(u) will be added to the pq
+    // starting from (0, 0)
+    pq.push({grid[0][0] , 0, 0});
+
+    // 4 directions
+    vector<pair<int,int>> directions = {
+        {0,1}, {1,0}, {0,-1}, {-1,0}
+    };
+
+    // Dijkstra starts here
+    while(!pq.empty()) {
+
+        // step 1: pick a new transit node 
+        auto top = pq.top();
+        pq.pop();
+
+        //minimum wait time for path: k -> u
+        int currTime = top[0];
+
+        // x coordinate of transit node u
+        int ux = top[1];
+
+        // y coordinate of the transit node u
+        int uy = top[2];
+
+        // step 2: visit all neighbours of the transit node (up, down, left, right)
+        for(auto [dx, dy] : directions) {
+
+            // identify destination node v coordinates after taking 1 step
+            int vx = ux+dx;
+            int vy = uy+dy;
+
+            // check whether node v is within bound
+            if(vx >= 0 & vx < n && vy >= 0 && vy < n)
+            {
+                
+            }
+
+        }
+
+
+
+    }
+
+    
+}
 
